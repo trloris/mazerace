@@ -24,7 +24,7 @@ Game.prototype.newMaze = function() {
 }
 
 Game.prototype.addPlayer = function(player) {
-    this.players[id] = player;
+    this.players[player.id] = player;
 }
 
 Game.prototype.checkWin = function(player) {
@@ -98,7 +98,7 @@ Player.prototype.move = function(direction) {
 var game = new Game(50, 50);
 
 function handler (req, res) {
-  fs.readFile(__dirname + '/test.html',
+  fs.readFile(__dirname + req.url,
   function (err, data) {
     if (err) {
       res.writeHead(500);
@@ -117,9 +117,10 @@ io.sockets.on('connection', function (socket) {
     game.addPlayer(player);
     socket.emit('new player', player);
     io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
-                                                  end: game.endingLocation, players: game.players});    
+                                                  end: game.endingLocation, players: game.players,
+                                                  x: game.x, y: game.y});    
   });
   socket.on('disconnect', function() {
-    delete players[socket.id];
+    delete game.players[socket.id];
   });
 });

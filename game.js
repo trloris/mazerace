@@ -3,7 +3,10 @@ var Game = function(gameDetails) {
     this.start = gameDetails.start;
     this.end = gameDetails.end;
     this.players = gameDetails.players;
+    this.x = gameDetails.x;
+    this.y = gameDetails.y;
     this.ctx = document.getElementById('bg').getContext('2d');
+    this.drawBG();
 }
 
 Game.prototype.drawBG = function() {
@@ -35,11 +38,17 @@ Game.prototype.drawBG = function() {
 
     // Draw staring and ending locations
     this.ctx.fillStyle = "green";
-    this.ctx.fillRect(this.startingLocation.x * 10 + 1, this.startingLocation.y * 10 + 1, 8, 8);
+    this.ctx.fillRect(this.start.x * 10 + 1, this.start.y * 10 + 1, 8, 8);
     this.ctx.fillStyle = "red";
-    this.ctx.fillRect(this.endingLocation.x * 10 + 1, this.endingLocation.y * 10 + 1, 8, 8);
+    this.ctx.fillRect(this.end.x * 10 + 1, this.end.y * 10 + 1, 8, 8);
 }
 
 Game.prototype.addPlayer = function(player) {
     this.players[player.id] = player;
 }
+
+var socket = io.connect('http://192.168.0.135:8080');
+var game;
+socket.on('newMaze', function(data) {
+    game = new Game(data);
+});
