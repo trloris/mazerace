@@ -36,7 +36,7 @@ var Cell = function(x, y) {
     }
 }
 
-var Maze = function(width, height) {
+exports.Maze = function(width, height) {
     var findCellNeighborsWithWalls = function(cell) {
         var neighbors = [];
         var x = cell.x;
@@ -77,12 +77,10 @@ var Maze = function(width, height) {
 
     var randomX = Math.floor((Math.random() * width));
     var randomY = Math.floor((Math.random() * height));
-
     var currentCell = maze[randomX][randomY];
     currentCell.visited = true;
     var visitedCells = 1;
     var cellStack = [];
-    console.log(currentCell.validCell());
     while (visitedCells < totalCells) {
         var neighbors = findCellNeighborsWithWalls(currentCell);
         if (neighbors.length > 0) {
