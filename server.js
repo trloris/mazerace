@@ -120,9 +120,4 @@ io.sockets.on('connection', function (socket) {
     io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
                                                   end: game.endingLocation, players: game.players});
   });
-  socket.on('my other event', function (data) {
-    var mazeContents = new maze.Maze(10, 10);
-    //socket.emit('news', { maze: mazeContents.pretty()});
-    //console.log(data);
-  });
 });
