@@ -9,7 +9,7 @@ var Game = function(x, y) {
     this.x = x || 50;
     this.y = y || 50;
 
-    this.players = [];
+    this.players = {};
     this.newMaze(x, y);
     this.startingLocation = { x: Math.floor(Math.random() * this.x),
                               y: Math.floor(Math.random() * this.y) };
@@ -24,7 +24,7 @@ Game.prototype.newMaze = function() {
 }
 
 Game.prototype.addPlayer = function(player) {
-    this.players.push(player);
+    this.players[id] = player;
 }
 
 Game.prototype.checkWin = function(player) {
@@ -111,7 +111,6 @@ function handler (req, res) {
 }
 
 io.sockets.on('connection', function (socket) {
-  //socket.emit('news', { hello: 'world' });
   socket.on('join game', function(data) {
     var name = data.name || 'player';
     var player = new Player(name, socket.id);
