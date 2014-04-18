@@ -90,9 +90,10 @@ Player.prototype.move = function(direction) {
     }
 
     if (moved) {
-        socket.emit('newLocation', { id: this.id, x: this.x, y: this.y });
         game.checkWin(this);
+        return true;
     }
+    return false;
 }
 
 var game = new Game(50, 50);
@@ -120,6 +121,14 @@ io.sockets.on('connection', function (socket) {
                                                   end: game.endingLocation, players: game.players,
                                                   x: game.x, y: game.y});    
   });
+
+  socket.on('move', function(data) {
+    var player = game.players[socket.id];
+    if (player.move(data)) {
+        socket.emit('newLocation', {id: player.id, x: player.x, y: player.y});
+    }
+  });
+
   socket.on('disconnect', function() {
     delete game.players[socket.id];
   });
