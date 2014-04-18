@@ -1,0 +1,141 @@
+<head>
+	<script src="/maze.js"></script>
+		<script type="application/javascript">
+
+		var Game = function(x, y) {
+			this.x = x || 50;
+			this.y = y || 50;
+
+			this.players = [];
+			this.ctx = document.getElementById('bg').getContext('2d');
+			this.newMaze(x, y);
+			console.log(document.getElementById('bg').getContext('2d'));
+		}
+
+		Game.prototype.newMaze = function() {
+			var maze = new Maze(this.x, this.y);
+			this.mazeContents = maze.pretty();
+			this.startingLocation = { x: Math.floor(Math.random() * this.x), y: Math.floor(Math.random() * this.y) };
+			this.endingLocation = { x: Math.floor(Math.random() * this.x), y: Math.floor(Math.random() * this.y) };
+			this.drawBG();
+		}
+
+		Game.prototype.drawBG = function() {
+			this.ctx.clearRect(0, 0, this.x * 10 + 1, this.y * 10 + 1);
+			this.ctx.beginPath();
+			for (var i = 0; i < this.x; i++) {
+
+				for (var j = 0; j < this.y; j++) {
+					this.ctx.beginPath();
+					if(this.mazeContents[i][j].top) {
+						this.ctx.moveTo(i * 10, j * 10);
+						this.ctx.lineTo(i * 10 + 10, j * 10);
+					}
+					if(this.mazeContents[i][j].bottom) {
+						this.ctx.moveTo(i * 10, j * 10 + 10);
+						this.ctx.lineTo(i * 10 + 10, j * 10 + 10);
+					}
+					if(this.mazeContents[i][j].left) {
+						this.ctx.moveTo(i * 10, j * 10);
+						this.ctx.lineTo(i * 10, j * 10 + 10);
+					}
+					if(this.mazeContents[i][j].right) {
+						this.ctx.moveTo(i * 10 + 10, j * 10);
+						this.ctx.lineTo(i * 10 + 10, j * 10 + 10);
+					}
+					this.ctx.stroke();
+				}
+			}
+
+			// Draw staring and ending locations
+			this.ctx.fillStyle = "green";
+			this.ctx.fillRect(this.startingLocation.x * 10 + 1, this.startingLocation.y * 10 + 1, 8, 8);
+			this.ctx.fillStyle = "red";
+			this.ctx.fillRect(this.endingLocation.x * 10 + 1, this.endingLocation.y * 10 + 1, 8, 8);
+		}
+
+		Game.prototype.addPlayer = function(player) {
+			this.players.push(player);
+		}
+
+		Game.prototype.checkWin = function(player) {
+			if (player.x === this.endingLocation.x && player.y === this.endingLocation.y) {
+				alert(player.name + ' has won!');
+				this.newMaze();
+				this.resetPlayers();
+			}
+		}
+
+		Game.prototype.resetPlayers = function() {
+			for (var i = 0; i < this.players.length; i++) {
+				this.players[i].x = this.startingLocation.x;
+				this.players[i].y = this.startingLocation.y;
+				this.players[i].draw();
+				console.log('ts');
+			}
+		}
+
+		var Player = function(name) {
+			this.name = name;
+			this.x = game.startingLocation.x;
+			this.y = game.startingLocation.y;
+		}
+
+		Player.prototype.draw = function(ctx) {
+			ctx.fillStyle = "blue";
+			ctx.fillRect(this.x * 10 + 1, this.y * 10 + 1, 8, 8);
+		}
+
+		Player.prototype.move = function(direction) {
+			var thisCell = game.mazeContents[this.x][this.y];
+			if (direction==='down') {
+				if (!thisCell.bottom) {
+					this.y++;
+				} 
+			} else if (direction === 'up') {
+				if (!thisCell.top) {
+					this.y--;
+				}
+			} else if (direction === 'left') {
+				if (!thisCell.left) {
+					this.x--;
+				}
+			} else if (direction === 'right') {
+				if (!thisCell.right) {
+					this.x++;
+				}
+			}
+			game.checkWin(this);
+		} 
+	</script>
+</head>
+<body onload="">
+	<canvas id="bg" width="500" height="500" style="position: absolute; z-index: 0"></canvas>
+	<canvas id="fg" width="500" height="500" style="position: absolute; z-index: 1" tabindex="0"></canvas>
+	<script type="application/javascript">
+		var fg = document.getElementById('fg');
+		var fgx = fg.getContext('2d');
+		function doKeyDown(e) {
+			fgx.clearRect(0, 0, fg.width, fg.height);
+			// W
+			if (e.keyCode === 87) {
+				player.move('up');
+			} else if (e.keyCode === 83) {
+				// S
+				player.move('down');
+			} else if (e.keyCode === 65) {
+				// A
+				player.move('left');
+			} else if (e.keyCode === 68) {
+				// D
+				player.move('right');
+			}
+
+			player.draw(fgx);
+		}
+		fg.addEventListener('keydown', doKeyDown, true);
+		var game = new Game(10, 10);
+		var player = new Player('freedonkeys');
+		game.addPlayer(player);
+	</script>
+</body>
