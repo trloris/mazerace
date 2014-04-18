@@ -117,6 +117,9 @@ io.sockets.on('connection', function (socket) {
     game.addPlayer(player);
     socket.emit('new player', player);
     io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
-                                                  end: game.endingLocation, players: game.players});
+                                                  end: game.endingLocation, players: game.players});    
+  });
+  socket.on('disconnect', function() {
+    delete players[socket.id];
   });
 });
