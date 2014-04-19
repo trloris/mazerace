@@ -143,7 +143,8 @@ var enterGame = function() {
     })
 
     socket.on('chat', function(data) {
-        $('#chatBox').append('<p class="chatMessage">' + data.player + ': ' + data.message);
+        $('#chatBox').append('<p class="chatMessage"><span style="color:' + data.color +
+                             '">' + data.player + ':</span> ' + data.message);
         scrollChat();
     });
 };

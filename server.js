@@ -163,7 +163,7 @@ io.sockets.on('connection', function (socket) {
         } else {
             var shortMessage = data.substring(0, 200);
             var safeMessage = sanitizer.escape(shortMessage);
-            io.sockets.emit('chat', {player: player.name, message: safeMessage});
+            io.sockets.emit('chat', {player: player.name, color: player.color, message: safeMessage});
         }
         player.lastChatTime = now;
     } catch (e) {
