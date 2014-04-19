@@ -66,10 +66,15 @@ Game.prototype.drawBG = function() {
     }
 
     // Draw staring and ending locations
+    this.ctx.beginPath();
     this.ctx.fillStyle = "green";
-    this.ctx.fillRect(this.start.x * 10 + 1, this.start.y * 10 + 1, 8, 8);
+    this.ctx.arc(this.start.x * 10 + 5, this.start.y * 10 + 5, 3, 0, 2 * Math.PI, false);
+    this.ctx.fill();
+    //this.ctx.fillRect(this.start.x * 10 + 1, this.start.y * 10 + 1, 8, 8);
+    this.ctx.beginPath();
     this.ctx.fillStyle = "red";
-    this.ctx.fillRect(this.end.x * 10 + 1, this.end.y * 10 + 1, 8, 8);
+    this.ctx.arc(this.end.x * 10 + 5, this.end.y * 10 + 5, 3, 0, 2 * Math.PI, false);
+    this.ctx.fill();
 };
 
 Game.prototype.drawFG = function() {
