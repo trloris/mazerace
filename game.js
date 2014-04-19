@@ -36,7 +36,14 @@ var Game = function(gameDetails) {
     this.drawBG();
     this.drawFG();
     fg.addEventListener('keydown', onKeyDown, true);
+    this.playerListInit();
 };
+
+Game.prototype.playerListInit = function() {
+    for (var i in this.players) {
+        addToPlayerList(this.players[i]);
+    }
+}
 
 Game.prototype.drawBG = function() {
     this.ctx.clearRect(0, 0, this.x * 10 + 1, this.y * 10 + 1);
