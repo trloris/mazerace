@@ -28,7 +28,7 @@
 		<canvas id="bg" width="500" height="500" style="position: absolute; z-index: 0"></canvas>
 		<canvas id="fg" width="500" height="500" style="position: absolute; z-index: 1" tabindex="0"></canvas>
 	</div>
-	<form id="nameForm" name="nameEntry">
+	<form id="nameForm" name="nameEntry" onsubmit="return false;">
 		<label>Player Name:</label>
 		<input type="text" name="pname">
 		<input type="button" value="Enter Name" onClick="enterGame()">
