@@ -70,7 +70,6 @@ Game.prototype.drawBG = function() {
     this.ctx.fillStyle = "green";
     this.ctx.arc(this.start.x * 10 + 5, this.start.y * 10 + 5, 3, 0, 2 * Math.PI, false);
     this.ctx.fill();
-    //this.ctx.fillRect(this.start.x * 10 + 1, this.start.y * 10 + 1, 8, 8);
     this.ctx.beginPath();
     this.ctx.fillStyle = "red";
     this.ctx.arc(this.end.x * 10 + 5, this.end.y * 10 + 5, 3, 0, 2 * Math.PI, false);
@@ -106,3 +105,7 @@ socket.on('newLocation', function(data) {
 socket.on('newPlayer', function(data) {
     game.addPlayer(data);
 });
+
+var enterGame = function() {
+    socket.emit('joinGame', {name: document.nameEntry.pname.value});
+};

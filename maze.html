@@ -1,8 +1,15 @@
 <head>
 	<script src="/socket.io/socket.io.js"></script>
 </head>
-<body onload="">
-	<canvas id="bg" width="500" height="500" style="position: absolute; z-index: 0"></canvas>
-	<canvas id="fg" width="500" height="500" style="position: absolute; z-index: 1" tabindex="0"></canvas>
+<body>
+	<div id="game" style="position:relative; width:500px; height:500px;">
+		<canvas id="bg" width="500" height="500" style="position: absolute; z-index: 0"></canvas>
+		<canvas id="fg" width="500" height="500" style="position: absolute; z-index: 1" tabindex="0"></canvas>
+	</div>
+	<form name="nameEntry">
+		<label>Player Name:</label>
+		<input type="text" name="pname">
+		<input type="button" value="Enter Name" onClick="enterGame()">
+	</form>
 	<script src="/game.js"></script>
 </body>
