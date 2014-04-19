@@ -1,6 +1,7 @@
 var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
+  , sanitizer = require('sanitizer')
   , maze = require('./maze.js');
 
 app.listen(8080);
@@ -127,7 +128,9 @@ io.sockets.on('connection', function (socket) {
     // Make sure player hasn't already joined.
     if (typeof game.players[socket.id] === 'undefined') {
         var name = data.name || 'player';
-        var player = new Player(name.substring(0, 20), socket.id);
+        var shortName = name.substring(0, 20);
+        var safeName = sanitizer.escape(shortName);
+        var player = new Player(safeName, socket.id);
         game.addPlayer(player);
         socket.broadcast.emit('newPlayer', player);
         io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
@@ -157,7 +160,9 @@ io.sockets.on('connection', function (socket) {
         if (now - lastChatTime < 1000) {
             socket.emit('chat', {player: 'some jerk face', message: 'quiet down'});
         } else {
-            io.sockets.emit('chat', {player: player.name, message: data.substring(0, 200)});
+            var shortMessage = data.substring(0, 200);
+            var safeMessage = sanitizer.escape(shortMessage);
+            io.sockets.emit('chat', {player: player.name, message: safeMessage});
         }
         player.lastChatTime = now;
     } catch (e) {
