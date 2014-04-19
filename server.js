@@ -120,7 +120,7 @@ function handler (req, res) {
 io.sockets.on('connection', function (socket) {
   socket.on('joinGame', function(data) {
     var name = data.name || 'player';
-    var player = new Player(name, socket.id);
+    var player = new Player(name.substring(0, 20), socket.id);
     game.addPlayer(player);
     socket.broadcast.emit('newPlayer', player);
     io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
@@ -129,15 +129,39 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('move', function(data) {
-    var player = game.players[socket.id];
-    player.move(data);
+    try {
+        var player = game.players[socket.id];
+        player.move(data);
+    }
+    catch (e) {
+        console.log(e);
+    }
   });
 
   socket.on('chat', function(data) {
-    io.sockets.emit('chat', {player: game.players[socket.id].name, message: data});
+    try {
+        player = game.players[socket.id];
+        var timeStamp = new Date();
+        var now = timeStamp.getTime();
+        var lastChatTime = player.lastChatTime || 0;
+        var timeStamp = new Date();
+        var now = timeStamp.getTime();
+        if (now - lastChatTime < 1000) {
+            socket.emit('chat', {player: 'some jerk face', message: 'quiet down'});
+        } else {
+            io.sockets.emit('chat', {player: player.name, message: data.substring(0, 20)});
+        }
+        player.lastChatTime = now;
+    } catch (e) {
+        console.log(e);
+    }
   });
 
   socket.on('disconnect', function() {
-    delete game.players[socket.id];
+    try {
+        delete game.players[socket.id];
+    } catch (e) {
+        console.log(e);
+    }
   });
 });
