@@ -157,7 +157,7 @@ io.sockets.on('connection', function (socket) {
         if (now - lastChatTime < 1000) {
             socket.emit('chat', {player: 'some jerk face', message: 'quiet down'});
         } else {
-            io.sockets.emit('chat', {player: player.name, message: data.substring(0, 20)});
+            io.sockets.emit('chat', {player: player.name, message: data.substring(0, 200)});
         }
         player.lastChatTime = now;
     } catch (e) {
