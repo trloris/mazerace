@@ -65,13 +65,13 @@ Player.prototype.move = function(direction) {
     switch (direction) {
         case 'up':
             if (!thisCell.top) {
-                this.y++;
+                this.y--;
                 moved = true;
             }
             break;
         case 'down':
             if (!thisCell.bottom) {
-                this.y--;
+                this.y++;
                 moved = true;
             }
             break;
