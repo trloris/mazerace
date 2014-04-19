@@ -5,6 +5,11 @@ var app = require('http').createServer(handler)
 
 app.listen(8080);
 
+io.enable('broset client minification');
+io.enable('browser client etag');
+io.enable('broser client gzip');
+io.enable('log level', 1);
+
 var Game = function(x, y) {
     this.x = x || 50;
     this.y = y || 50;
@@ -119,13 +124,16 @@ function handler (req, res) {
 
 io.sockets.on('connection', function (socket) {
   socket.on('joinGame', function(data) {
-    var name = data.name || 'player';
-    var player = new Player(name.substring(0, 20), socket.id);
-    game.addPlayer(player);
-    socket.broadcast.emit('newPlayer', player);
-    io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
-                                                  end: game.endingLocation, players: game.players,
-                                                  x: game.x, y: game.y});
+    // Make sure player hasn't already joined.
+    if (typeof game.players[socket.id] === 'undefined') {
+        var name = data.name || 'player';
+        var player = new Player(name.substring(0, 20), socket.id);
+        game.addPlayer(player);
+        socket.broadcast.emit('newPlayer', player);
+        io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
+                                                      end: game.endingLocation, players: game.players,
+                                                      x: game.x, y: game.y});
+    }
   });
 
   socket.on('move', function(data) {
