@@ -3,6 +3,7 @@
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<style>
 		#chatBox {
+			clear:both;
 			height: 250px;
 			background: white;
 			overflow: auto;
@@ -21,12 +22,42 @@
 		p.chatMessage {
 			color: black;
 		}
+
+		#playerList {
+			float:right;
+			width:240px;6
+			height:500px;
+		}
+
+		#nameForm {
+			clear:both;
+		}
+
+		div.playerEntry {
+			clear:left;
+		}
+		div.playerBox {
+			margin-top:3px;
+			width:8px;
+			height:8px;
+			float:left;
+		}
+
+		p.boxName {
+			padding-left:2px;
+			float:left;
+			display:inline;
+			font-size:8pt;
+		}
+
+
 	</style>
 </head>
 <body>
-	<div id="game" style="position:relative; width:500px; height:500px;">
+	<div id="game" style="float:left;position:relative; width:750; height:500px;">
 		<canvas id="bg" width="500" height="500" style="position: absolute; z-index: 0"></canvas>
 		<canvas id="fg" width="500" height="500" style="position: absolute; z-index: 1" tabindex="0"></canvas>
+	<div id="playerList"></div>
 	</div>
 	<form id="nameForm" name="nameEntry" onsubmit="return false;">
 		<label>Player Name:</label>

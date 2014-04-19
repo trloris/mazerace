@@ -9,7 +9,8 @@ app.listen(8080);
 io.enable('broset client minification');
 io.enable('browser client etag');
 io.enable('broser client gzip');
-io.enable('log level', 1);
+
+io.set('close timeout', 15);
 
 var Game = function(x, y) {
     this.x = x || 50;
@@ -172,6 +173,7 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('disconnect', function() {
     try {
+        io.sockets.emit('leaveGame', socket.id);
         delete game.players[socket.id];
     } catch (e) {
         console.log(e);

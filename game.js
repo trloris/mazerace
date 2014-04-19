@@ -92,6 +92,7 @@ Game.prototype.addPlayer = function(player) {
 var socket = io.connect('http://192.168.0.135:8080');
 
 var enterGame = function() {
+    var game;
     socket.emit('joinGame', {name: document.nameEntry.pname.value});
 
     var form = document.getElementById("nameForm");
@@ -99,14 +100,12 @@ var enterGame = function() {
     
     $('body').append('<div id="chatBox"></div>');
     $('body').append('<input id="chatText" type="text">');
-    $('#chatText').keyup(function(e) {
+    $('#chatText').keyup(function(event) {
         if (event.keyCode === 13) {
             socket.emit('chat', $('#chatText').val());
             $('#chatText').val('');
         }
     });
-
-    var game;
 
     socket.on('win', function(data) {
         $('#chatBox').append('<p class="serverMessage">' + data + ' has won!');
@@ -127,14 +126,26 @@ var enterGame = function() {
     socket.on('newPlayer', function(data) {
         game.addPlayer(data);
         $('#chatBox').append('<p class="serverMessage">' + data.name + ' has joined!');
-        console.log('test');
         scrollChat();
+        addToPlayerList(data);
     });
+
+    socket.on('leaveGame', function(id) {
+        $('#' + id).remove();
+        delete game.players[id];
+    })
 
     socket.on('chat', function(data) {
         $('#chatBox').append('<p class="chatMessage">' + data.player + ': ' + data.message);
         scrollChat();
     });
+};
+
+var addToPlayerList = function (player) {
+    var playerInfo = '<div class="playerEntry" id="' + player.id + '"></diav>';
+    $('#playerList').append(playerInfo);
+    $('#' + player.id).append('<div class="playerBox" style="background-color:' + player.color + '"></div>');
+    $('#' + player.id).append('<p class="boxName">' + player.name + '</p>');
 };
 
 var scrollChat = function() {
