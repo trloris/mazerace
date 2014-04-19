@@ -112,11 +112,11 @@ function handler (req, res) {
 }
 
 io.sockets.on('connection', function (socket) {
-  socket.on('join game', function(data) {
+  socket.on('joinGame', function(data) {
     var name = data.name || 'player';
     var player = new Player(name, socket.id);
     game.addPlayer(player);
-    io.sockets.emit('new player', player);
+    io.sockets.emit('newPlayer', player);
     io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
                                                   end: game.endingLocation, players: game.players,
                                                   x: game.x, y: game.y});    
