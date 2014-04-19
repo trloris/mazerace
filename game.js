@@ -126,6 +126,9 @@ var enterGame = function() {
 
     socket.on('newPlayer', function(data) {
         game.addPlayer(data);
+        $('#chatBox').append('<p class="serverMessage">' + data.name + ' has joined!');
+        console.log('test');
+        scrollChat();
     });
 
     socket.on('chat', function(data) {
