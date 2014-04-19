@@ -40,6 +40,7 @@ Game.prototype.addPlayer = function(player) {
 
 Game.prototype.checkWin = function(player) {
     if (player.x === this.endingLocation.x && player.y === this.endingLocation.y) {
+        player.score++;
         io.sockets.emit('win', player.name);
         this.newMaze();
         this.resetPlayers();
@@ -71,6 +72,7 @@ var Player = function(name, id) {
     this.color = randomColor();
     this.x = game.startingLocation.x;
     this.y = game.startingLocation.y;
+    this.score = 0;
 }
 
 Player.prototype.move = function(direction) {
@@ -109,7 +111,7 @@ Player.prototype.move = function(direction) {
     }
 }
 
-var game = new Game(50, 50);
+var game = new Game(5, 5);
 
 function handler (req, res) {
   fs.readFile(__dirname + req.url,

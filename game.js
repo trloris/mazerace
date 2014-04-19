@@ -40,8 +40,13 @@ var Game = function(gameDetails) {
 };
 
 Game.prototype.playerListInit = function() {
+    var playersToSort = [];
     for (var i in this.players) {
-        addToPlayerList(this.players[i]);
+        playersToSort.push(this.players[i]);
+        playersToSort.sort(function(a, b) { return b.score - a.score });
+        for (var i = 0; i < playersToSort.length; i++) {
+            addToPlayerList(playersToSort[i]);
+        }
     }
 }
 
@@ -150,10 +155,11 @@ var enterGame = function() {
 };
 
 var addToPlayerList = function (player) {
+    $('#' + player.id).remove();
     var playerInfo = '<div class="playerEntry" id="' + player.id + '"></diav>';
     $('#playerList').append(playerInfo);
     $('#' + player.id).append('<div class="playerBox" style="background-color:' + player.color + '"></div>');
-    $('#' + player.id).append('<p class="boxName">' + player.name + '</p>');
+    $('#' + player.id).append('<p class="boxName">' + player.name + ' ' + player.score + '</p>');
 };
 
 var scrollChat = function() {
