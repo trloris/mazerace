@@ -11,17 +11,21 @@ var Game = function(x, y) {
 
     this.players = {};
     this.newMaze(x, y);
-    this.startingLocation = { x: Math.floor(Math.random() * this.x),
-                              y: Math.floor(Math.random() * this.y) };
-    this.endingLocation = { x: Math.floor(Math.random() * this.x),
-                            y: Math.floor(Math.random() * this.y) };
-}
+    this.newLocations();
+};
 
 Game.prototype.newMaze = function() {
     var gameMaze = new maze.Maze(this.x, this.y);
     this.mazeContents = gameMaze.pretty();
+    this.newLocations();
+};
 
-}
+Game.prototype.newLocations = function() {
+    this.startingLocation = { x: Math.floor(Math.random() * this.x),
+                              y: Math.floor(Math.random() * this.y) };
+    this.endingLocation = { x: Math.floor(Math.random() * this.x),
+                            y: Math.floor(Math.random() * this.y) };
+};
 
 Game.prototype.addPlayer = function(player) {
     this.players[player.id] = player;
@@ -32,6 +36,9 @@ Game.prototype.checkWin = function(player) {
         io.sockets.emit('win', player.name);
         this.newMaze();
         this.resetPlayers();
+        io.sockets.emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
+                                                      end: game.endingLocation, players: game.players,
+                                                      x: game.x, y: game.y});
     }
 }
 
@@ -90,13 +97,12 @@ Player.prototype.move = function(direction) {
     }
 
     if (moved) {
+        io.sockets.emit('newLocation', {id: this.id, x: this.x, y: this.y});
         game.checkWin(this);
-        return true;
     }
-    return false;
 }
 
-var game = new Game(50, 50);
+var game = new Game(10, 10);
 
 function handler (req, res) {
   fs.readFile(__dirname + req.url,
@@ -116,17 +122,15 @@ io.sockets.on('connection', function (socket) {
     var name = data.name || 'player';
     var player = new Player(name, socket.id);
     game.addPlayer(player);
-    io.sockets.emit('newPlayer', player);
+    socket.broadcast.emit('newPlayer', player);
     io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
                                                   end: game.endingLocation, players: game.players,
-                                                  x: game.x, y: game.y});    
+                                                  x: game.x, y: game.y});
   });
 
   socket.on('move', function(data) {
     var player = game.players[socket.id];
-    if (player.move(data)) {
-        io.sockets.emit('newLocation', {id: player.id, x: player.x, y: player.y});
-    }
+    player.move(data);
   });
 
   socket.on('disconnect', function() {
