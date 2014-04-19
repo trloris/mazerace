@@ -43,7 +43,7 @@ Game.prototype.checkWin = function(player) {
 }
 
 Game.prototype.resetPlayers = function() {
-    for (var i = 0; i < this.players.length; i++) {
+    for (var i in this.players) {
         this.players[i].x = this.startingLocation.x;
         this.players[i].y = this.startingLocation.y;
     }
