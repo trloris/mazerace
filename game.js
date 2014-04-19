@@ -74,9 +74,10 @@ Game.prototype.drawBG = function() {
 
 Game.prototype.drawFG = function() {
     this.ftx.clearRect(0, 0, fg.width, fg.height);
-    for (var i=0; i < this.players.length; i++) {
+    for (var i in this.players) {
+        console.log('tester');
         this.ftx.fillStyle = this.players[i].color;
-        this.ftx.fillRect(this.x * 10 + 1, this.y * 10 + 1, 8, 8);
+        this.ftx.fillRect(this.players[i].x * 10 + 1, this.players[i].y * 10 + 1, 8, 8);
     }
 };
 
@@ -86,6 +87,13 @@ Game.prototype.addPlayer = function(player) {
 
 var socket = io.connect('http://192.168.0.135:8080');
 var game;
+
 socket.on('newMaze', function(data) {
     game = new Game(data);
 });
+
+socket.on('newLocation', function(data) {
+    game.players[data.id].x = data.x;
+    game.players[data.id].y = data.y;
+    game.drawFG();
+})
