@@ -1,12 +1,34 @@
 <head>
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<style>
+		#chatBox {
+			height: 250px;
+			background: white;
+			overflow: auto;
+			width: 500px;
+			border: 1px solid black;
+		}
+		p {
+			margin: 0px;
+			border: 0px;
+			padding: 0px;
+		}
+		p.serverMessage {
+			color: red;
+		}
+
+		p.chatMessage {
+			color: black;
+		}
+	</style>
 </head>
 <body>
 	<div id="game" style="position:relative; width:500px; height:500px;">
 		<canvas id="bg" width="500" height="500" style="position: absolute; z-index: 0"></canvas>
 		<canvas id="fg" width="500" height="500" style="position: absolute; z-index: 1" tabindex="0"></canvas>
 	</div>
-	<form name="nameEntry">
+	<form id="nameForm" name="nameEntry">
 		<label>Player Name:</label>
 		<input type="text" name="pname">
 		<input type="button" value="Enter Name" onClick="enterGame()">

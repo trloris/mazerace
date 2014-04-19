@@ -133,6 +133,10 @@ io.sockets.on('connection', function (socket) {
     player.move(data);
   });
 
+  socket.on('chat', function(data) {
+    io.sockets.emit('chat', {player: game.players[socket.id].name, message: data});
+  });
+
   socket.on('disconnect', function() {
     delete game.players[socket.id];
   });

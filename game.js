@@ -90,22 +90,57 @@ Game.prototype.addPlayer = function(player) {
 };
 
 var socket = io.connect('http://192.168.0.135:8080');
-var game;
-
-socket.on('newMaze', function(data) {
-    game = new Game(data);
-});
-
-socket.on('newLocation', function(data) {
-    game.players[data.id].x = data.x;
-    game.players[data.id].y = data.y;
-    game.drawFG();
-});
-
-socket.on('newPlayer', function(data) {
-    game.addPlayer(data);
-});
 
 var enterGame = function() {
     socket.emit('joinGame', {name: document.nameEntry.pname.value});
+
+    var form = document.getElementById("nameForm");
+    form.parentNode.removeChild(form);
+    
+    $('body').append('<div id="chatBox"></div>');
+    $('body').append('<input id="chatText" type="text">');
+    $('#chatText').keyup(function(e) {
+        if (event.keyCode === 13) {
+            socket.emit('chat', $('#chatText').val());
+            $('#chatText').val('');
+        }
+    });
+
+    var game;
+
+    socket.on('win', function(data) {
+        $('#chatBox').append('<p class="serverMessage">' + data + ' has won!');
+        scrollChat();
+    });
+
+    socket.on('newMaze', function(data) {
+        game = new Game(data);
+    });
+
+    socket.on('newLocation', function(data) {
+        game.players[data.id].x = data.x;
+        game.players[data.id].y = data.y;
+        game.drawFG();
+
+    });
+
+    socket.on('newPlayer', function(data) {
+        game.addPlayer(data);
+    });
+
+    socket.on('chat', function(data) {
+        $('#chatBox').append('<p class="chatMessage">' + data.player + ': ' + data.message);
+        scrollChat();
+    });
+};
+
+var scrollChat = function() {
+        var height = 0;
+        $('#chatBox p').each(function() {
+            height += parseInt($(this).height());
+        });
+
+        height += '';
+
+        $('#chatBox').animate({scrollTop: height});
 };
