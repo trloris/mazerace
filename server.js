@@ -29,7 +29,7 @@ Game.prototype.addPlayer = function(player) {
 
 Game.prototype.checkWin = function(player) {
     if (player.x === this.endingLocation.x && player.y === this.endingLocation.y) {
-        socket.emit('win', player.name);
+        io.sockets.emit('win', player.name);
         this.newMaze();
         this.resetPlayers();
     }
@@ -116,7 +116,7 @@ io.sockets.on('connection', function (socket) {
     var name = data.name || 'player';
     var player = new Player(name, socket.id);
     game.addPlayer(player);
-    socket.emit('new player', player);
+    io.sockets.emit('new player', player);
     io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
                                                   end: game.endingLocation, players: game.players,
                                                   x: game.x, y: game.y});    
@@ -125,7 +125,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('move', function(data) {
     var player = game.players[socket.id];
     if (player.move(data)) {
-        socket.emit('newLocation', {id: player.id, x: player.x, y: player.y});
+        io.sockets.emit('newLocation', {id: player.id, x: player.x, y: player.y});
     }
   });
 

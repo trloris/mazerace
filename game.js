@@ -93,6 +93,7 @@ socket.on('newMaze', function(data) {
 });
 
 socket.on('newLocation', function(data) {
+    console.log('check');
     game.players[data.id].x = data.x;
     game.players[data.id].y = data.y;
     game.drawFG();
