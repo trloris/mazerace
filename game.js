@@ -4,21 +4,25 @@ var onKeyDown = function(e) {
         case 87:
         case 38:
             socket.emit('move', 'up');
+            e.preventDefault();
             break;
         //S or Down
         case 83:
         case 40:
             socket.emit('move', 'down');
+            e.preventDefault();
             break;
         // A or Left
         case 65:
         case 37:
             socket.emit('move', 'left');
+            e.preventDefault();
             break;
         //D or Right
         case 68:
         case 39:
             socket.emit('move', 'right');
+            e.preventDefault();
             break;
     }
 };

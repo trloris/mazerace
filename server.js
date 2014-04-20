@@ -111,7 +111,7 @@ Player.prototype.move = function(direction) {
     }
 }
 
-var game = new Game(5, 5);
+var game = new Game(50, 50);
 
 function handler (req, res) {
   fs.readFile(__dirname + req.url,
