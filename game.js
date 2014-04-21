@@ -1,27 +1,36 @@
 var onKeyDown = function(e) {
+    var currentCell = { x: game.thisPlayer().x, y: game.thisPlayer().y };
     switch (e.keyCode) {
         // W or Up
         case 87:
         case 38:
-            socket.emit('move', 'up');
+            if (!game.mazeContents[currentCell.x][currentCell.y].top); {
+                socket.emit('move', 'up');
+            }
             e.preventDefault();
             break;
         //S or Down
         case 83:
         case 40:
-            socket.emit('move', 'down');
+            if (!game.mazeContents[currentCell.x][currentCell.y].bottom); {
+                socket.emit('move', 'down');
+            }
             e.preventDefault();
             break;
         // A or Left
         case 65:
         case 37:
-            socket.emit('move', 'left');
+            if (!game.mazeContents[currentCell.x][currentCell.y].left); {
+                socket.emit('move', 'left');
+            }
             e.preventDefault();
             break;
         //D or Right
         case 68:
         case 39:
-            socket.emit('move', 'right');
+            if (!game.mazeContents[currentCell.x][currentCell.y].right); { 
+                socket.emit('move', 'right');
+            }
             e.preventDefault();
             break;
     }
@@ -105,10 +114,15 @@ Game.prototype.addPlayer = function(player) {
     this.drawFG();
 };
 
+Game.prototype.thisPlayer = function() {
+    return this.players[socket.socket.sessionid];
+}
+
 var socket = io.connect('http://192.168.0.135:8080');
 
+var game;
+
 var enterGame = function() {
-    var game;
     socket.emit('joinGame', {name: document.nameEntry.pname.value});
 
     var form = document.getElementById("nameForm");
