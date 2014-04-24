@@ -55,7 +55,7 @@ Game.prototype.resetPlayers = function() {
         this.players[i].x = this.startingLocation.x;
         this.players[i].y = this.startingLocation.y;
     }
-}
+};
 
 var randomColor = function() {
     var red = Math.floor(Math.random() * 256);
@@ -64,7 +64,7 @@ var randomColor = function() {
     var color = 'rgb(' + red + ',' + blue + ',' + green + ')';
 
     return color;
-}
+};
 
 var Player = function(name, id) {
     this.name = name;
@@ -73,7 +73,7 @@ var Player = function(name, id) {
     this.x = game.startingLocation.x;
     this.y = game.startingLocation.y;
     this.score = 0;
-}
+};
 
 Player.prototype.move = function(direction) {
     var thisCell = game.mazeContents[this.x][this.y];
@@ -109,7 +109,7 @@ Player.prototype.move = function(direction) {
         io.sockets.emit('newLocation', {id: this.id, x: this.x, y: this.y});
         game.checkWin(this);
     }
-}
+};
 
 var game = new Game(50, 50);
 
@@ -124,7 +124,7 @@ function handler (req, res) {
     res.writeHead(200);
     res.end(data);
   });
-}
+};
 
 io.sockets.on('connection', function (socket) {
   socket.on('joinGame', function(data) {
