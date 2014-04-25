@@ -1,4 +1,4 @@
-var app = require('http').createServer(handler)
+var app = require('http').createServer()
   , io = require('socket.io').listen(app)
   , fs = require('fs')
   , sanitizer = require('sanitizer')
@@ -120,19 +120,6 @@ Player.prototype.move = function(direction) {
 };
 
 var game = new Game(50, 50);
-
-function handler (req, res) {
-    fs.readFile(__dirname + req.url,
-    function (err, data) {
-        if (err) {
-          res.writeHead(500);
-          return res.end('Error loading index.html');
-        }
-
-        res.writeHead(200);
-        res.end(data);
-    });
-};
 
 io.sockets.on('connection', function (socket) {
     // When a player joins, add to player collection and send them game contents.
