@@ -135,20 +135,20 @@ function handler (req, res) {
 };
 
 io.sockets.on('connection', function (socket) {
-  socket.on('joinGame', function(data) {
+    socket.on('joinGame', function(data) {
     // Make sure player hasn't already joined.
-    if (typeof game.players[socket.id] === 'undefined') {
-        var name = data.name || 'player';
-        var shortName = name.substring(0, 20);
-        var safeName = sanitizer.escape(shortName);
-        var player = new Player(safeName, socket.id);
-        game.addPlayer(player);
-        socket.broadcast.emit('newPlayer', player);
-        io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
-                                                      end: game.endingLocation, players: game.players,
-                                                      x: game.x, y: game.y});
-    }
-  });
+        if (typeof game.players[socket.id] === 'undefined') {
+            var name = data.name || 'player';
+            var shortName = name.substring(0, 20);
+            var safeName = sanitizer.escape(shortName);
+            var player = new Player(safeName, socket.id);
+            game.addPlayer(player);
+            socket.broadcast.emit('newPlayer', player);
+            io.sockets.socket(socket.id).emit('newMaze', {maze: game.mazeContents, start: game.startingLocation,
+                                                          end: game.endingLocation, players: game.players,
+                                                          x: game.x, y: game.y});
+        }
+    });
 
   socket.on('move', function(data) {
     try {
