@@ -36,7 +36,7 @@ Game.prototype.newLocations = function() {
 
 Game.prototype.addPlayer = function(player) {
     this.players[player.id] = player;
-}
+};
 
 Game.prototype.checkWin = function(player) {
     if (player.x === this.endingLocation.x && player.y === this.endingLocation.y) {
@@ -48,7 +48,7 @@ Game.prototype.checkWin = function(player) {
                                                       end: game.endingLocation, players: game.players,
                                                       x: game.x, y: game.y});
     }
-}
+};
 
 Game.prototype.resetPlayers = function() {
     for (var i in this.players) {
