@@ -135,6 +135,7 @@ function handler (req, res) {
 };
 
 io.sockets.on('connection', function (socket) {
+    // When a player joins, add to player collection and send them game contents.
     socket.on('joinGame', function(data) {
     // Make sure player hasn't already joined.
         if (typeof game.players[socket.id] === 'undefined') {
@@ -168,7 +169,7 @@ io.sockets.on('connection', function (socket) {
         var lastChatTime = player.lastChatTime || 0;
         var timeStamp = new Date();
         var now = timeStamp.getTime();
-        if (now - lastChatTime < 1000) {
+        if (now - lastChatTime < 1000) { // Limit of one chat message per second. Send error message if over.
             socket.emit('chat', {player: 'some jerk face', message: 'quiet down'});
         } else {
             var shortMessage = data.substring(0, 200);
