@@ -122,16 +122,16 @@ Player.prototype.move = function(direction) {
 var game = new Game(50, 50);
 
 function handler (req, res) {
-  fs.readFile(__dirname + req.url,
-  function (err, data) {
-    if (err) {
-      res.writeHead(500);
-      return res.end('Error loading index.html');
-    }
+    fs.readFile(__dirname + req.url,
+    function (err, data) {
+        if (err) {
+          res.writeHead(500);
+          return res.end('Error loading index.html');
+        }
 
-    res.writeHead(200);
-    res.end(data);
-  });
+        res.writeHead(200);
+        res.end(data);
+    });
 };
 
 io.sockets.on('connection', function (socket) {
@@ -151,43 +151,43 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-  socket.on('move', function(data) {
-    try {
-        var player = game.players[socket.id];
-        player.move(data);
-    }
-    catch (e) {
-        console.log(e);
-    }
-  });
-
-  socket.on('chat', function(data) {
-    try {
-        player = game.players[socket.id];
-        var timeStamp = new Date();
-        var now = timeStamp.getTime();
-        var lastChatTime = player.lastChatTime || 0;
-        var timeStamp = new Date();
-        var now = timeStamp.getTime();
-        if (now - lastChatTime < 1000) { // Limit of one chat message per second. Send error message if over.
-            socket.emit('chat', {player: 'some jerk face', message: 'quiet down'});
-        } else {
-            var shortMessage = data.substring(0, 200);
-            var safeMessage = sanitizer.escape(shortMessage);
-            io.sockets.emit('chat', {player: player.name, color: player.color, message: safeMessage});
+    socket.on('move', function(data) {
+        try {
+            var player = game.players[socket.id];
+            player.move(data);
         }
-        player.lastChatTime = now;
-    } catch (e) {
-        console.log(e);
-    }
-  });
+        catch (e) {
+            console.log(e);
+        }
+    });
 
-  socket.on('disconnect', function() {
-    try {
-        io.sockets.emit('leaveGame', socket.id);
-        delete game.players[socket.id];
-    } catch (e) {
-        console.log(e);
-    }
-  });
+    socket.on('chat', function(data) {
+        try {
+            player = game.players[socket.id];
+            var timeStamp = new Date();
+            var now = timeStamp.getTime();
+            var lastChatTime = player.lastChatTime || 0;
+            var timeStamp = new Date();
+            var now = timeStamp.getTime();
+            if (now - lastChatTime < 1000) { // Limit of one chat message per second. Send error message if over.
+                socket.emit('chat', {player: 'some jerk face', message: 'quiet down'});
+            } else {
+                var shortMessage = data.substring(0, 200);
+                var safeMessage = sanitizer.escape(shortMessage);
+                io.sockets.emit('chat', {player: player.name, color: player.color, message: safeMessage});
+            }
+            player.lastChatTime = now;
+        } catch (e) {
+            console.log(e);
+        }
+    });
+
+    socket.on('disconnect', function() {
+        try {
+            io.sockets.emit('leaveGame', socket.id);
+            delete game.players[socket.id];
+        } catch (e) {
+            console.log(e);
+        }
+    });
 });
