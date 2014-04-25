@@ -21,12 +21,14 @@ var Game = function(x, y) {
     this.newLocations();
 };
 
+// Create game's maze
 Game.prototype.newMaze = function() {
     var gameMaze = new maze.Maze(this.x, this.y);
     this.mazeContents = gameMaze.pretty();
     this.newLocations();
 };
 
+// Create an ending and starting location for game
 Game.prototype.newLocations = function() {
     this.startingLocation = { x: Math.floor(Math.random() * this.x),
                               y: Math.floor(Math.random() * this.y) };
@@ -34,10 +36,12 @@ Game.prototype.newLocations = function() {
                             y: Math.floor(Math.random() * this.y) };
 };
 
+// Add a new player to player collection
 Game.prototype.addPlayer = function(player) {
     this.players[player.id] = player;
 };
 
+// Check if a player is at ending location
 Game.prototype.checkWin = function(player) {
     if (player.x === this.endingLocation.x && player.y === this.endingLocation.y) {
         player.score++;
@@ -50,6 +54,7 @@ Game.prototype.checkWin = function(player) {
     }
 };
 
+// After a game is won, move all players to starting location
 Game.prototype.resetPlayers = function() {
     for (var i in this.players) {
         this.players[i].x = this.startingLocation.x;
@@ -57,6 +62,8 @@ Game.prototype.resetPlayers = function() {
     }
 };
 
+// Create a random color of the format rgba(RRR,BBB,GGG).
+// Will be used for player's in game icon color.
 var randomColor = function() {
     var red = Math.floor(Math.random() * 256);
     var blue = Math.floor(Math.random() * 256);
@@ -75,6 +82,7 @@ var Player = function(name, id) {
     this.score = 0;
 };
 
+// Check if move is valid. If so, emit a signal to all players of the player's new location.
 Player.prototype.move = function(direction) {
     var thisCell = game.mazeContents[this.x][this.y];
     var moved = false;
